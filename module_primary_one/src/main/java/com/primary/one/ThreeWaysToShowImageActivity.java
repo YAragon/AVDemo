@@ -22,7 +22,7 @@ public class ThreeWaysToShowImageActivity extends AppCompatActivity implements V
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.iv_direct_tv) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.image_content_fl, new ImageViewWayFragmemt()).commitAllowingStateLoss();
+            getSupportFragmentManager().beginTransaction().replace(R.id.image_content_fl, new ImageViewWayFragment()).commitAllowingStateLoss();
 
         } else if (i == R.id.iv_surfaceview_tv) {
 

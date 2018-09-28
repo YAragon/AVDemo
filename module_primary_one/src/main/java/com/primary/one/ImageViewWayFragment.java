@@ -13,7 +13,7 @@ import android.widget.ImageView;
 
 /**
  * <p>Project: AVDemo2</p>
- * <p>Description: ImageViewWayFragmemt</p>
+ * <p>Description: ImageViewWayFragment</p>
  * <p>Copyright (c) 2018 www.duowan.com Inc. All rights reserved.</p>
  * <p>Company: YY Inc.</p>
  *
@@ -21,14 +21,24 @@ import android.widget.ImageView;
  * @date: 2018-09-28
  * @vserion: 1.0
  */
-public class ImageViewWayFragmemt extends Fragment {
+public class ImageViewWayFragment extends Fragment {
+
+    private Bitmap bitmap;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ImageView imageView = new ImageView(getActivity());
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ameri);
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ameri);
         imageView.setImageBitmap(bitmap);
         return imageView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (null != bitmap && !bitmap.isRecycled()) {
+            bitmap.recycle();
+        }
+        super.onDestroyView();
     }
 }
