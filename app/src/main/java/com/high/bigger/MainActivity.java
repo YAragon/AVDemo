@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.primary.one.AudioRecordTrackActivity;
+import com.primary.one.CameraSurfaceActivity;
 import com.primary.one.ThreeWaysToShowImageActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         findViewById(R.id.primary_one).setOnClickListener(this);
         findViewById(R.id.primary_two).setOnClickListener(this);
+        findViewById(R.id.primary_four).setOnClickListener(this);
     }
 
     @Override
@@ -28,6 +30,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 AudioRecordTrackActivity.launch(this);
                 break;
 
+            case R.id.primary_four:
+                CameraSurfaceActivity.launch(this);
+                break;
         }
     }
 }
