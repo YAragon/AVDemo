@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/extractor_btn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="Extractor" />
+
+    <Button
+        android:id="@+id/muxer_audio_btn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="MuxerAudio" />
+
+    <Button
+        android:id="@+id/muxer_btn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="Muxer" />
+
+    <Button
+        android:id="@+id/combine_video_btn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="CombineVideo" />
+
+</LinearLayout>

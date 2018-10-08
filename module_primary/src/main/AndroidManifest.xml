@@ -21,6 +21,10 @@
             android:name=".CameraSurfaceActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".MediaExtratorMuxerActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

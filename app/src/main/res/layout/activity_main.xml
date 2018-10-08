@@ -39,5 +39,16 @@
         android:text="初级：4、使用 Camera API 采集视频数据"
         android:textColor="#333333" />
 
+    <TextView
+        android:id="@+id/primary_five"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="5dp"
+        android:background="#eeeeee"
+        android:gravity="center|left"
+        android:paddingLeft="10dp"
+        android:text="初级：5、MediaExtractor和MediaMuxer"
+        android:textColor="#333333" />
+
 
 </LinearLayout>
