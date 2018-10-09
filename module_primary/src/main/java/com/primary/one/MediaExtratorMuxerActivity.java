@@ -31,6 +31,8 @@ import java.nio.ByteBuffer;
  */
 public class MediaExtratorMuxerActivity extends AppCompatActivity {
 
+    private static final String TAG = "MediaExtratorMuxer";
+
     private static final String SDCARD_PATH = Environment.getExternalStorageDirectory().getPath();
 
     private MediaExtractor mediaExtractor;
@@ -118,17 +120,18 @@ public class MediaExtratorMuxerActivity extends AppCompatActivity {
                     mediaMuxer.start();
                     ByteBuffer byteBuffer = ByteBuffer.allocate(500 * 1024);
                     long sampleTime = 0;
-                    {
-                        videoExtractor.readSampleData(byteBuffer, 0);
-                        if (videoExtractor.getSampleFlags() == MediaExtractor.SAMPLE_FLAG_SYNC) {
-                            videoExtractor.advance();
-                        }
-                        videoExtractor.readSampleData(byteBuffer, 0);
-                        long secondTime = videoExtractor.getSampleTime();
+                    videoExtractor.readSampleData(byteBuffer, 0);
+
+                    if (videoExtractor.getSampleFlags() == MediaExtractor.SAMPLE_FLAG_SYNC) {
                         videoExtractor.advance();
-                        long thirdTime = videoExtractor.getSampleTime();
-                        sampleTime = Math.abs(thirdTime - secondTime);
                     }
+
+                    videoExtractor.readSampleData(byteBuffer, 0);
+                    long secondTime = videoExtractor.getSampleTime();
+                    videoExtractor.advance();
+                    long thirdTime = videoExtractor.getSampleTime();
+                    sampleTime = Math.abs(thirdTime - secondTime);
+
                     videoExtractor.unselectTrack(videoTrackIndex);
                     videoExtractor.selectTrack(videoTrackIndex);
 
@@ -152,12 +155,15 @@ public class MediaExtratorMuxerActivity extends AppCompatActivity {
                         }
 
                         audioBufferInfo.size = readAudioSampleSize;
-                        audioBufferInfo.presentationTimeUs += audioExtractor.getSampleTime();
+                        audioBufferInfo.presentationTimeUs += sampleTime;
                         audioBufferInfo.offset = 0;
                         audioBufferInfo.flags = videoExtractor.getSampleFlags();
                         mediaMuxer.writeSampleData(writeAudioTrackIndex, byteBuffer, audioBufferInfo);
                         audioExtractor.advance();
                     }
+
+                    Log.d(TAG, "audioBufferInfo.presentationTimeUs：" + audioBufferInfo.presentationTimeUs);
+                    Log.d(TAG, "videoBufferInfo.presentationTimeUs：" + videoBufferInfo.presentationTimeUs);
 
                     mediaMuxer.stop();
                     mediaMuxer.release();
@@ -197,19 +203,16 @@ public class MediaExtratorMuxerActivity extends AppCompatActivity {
                     MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
                     mediaMuxer.start();
                     long videoSampleTime;
-                    {
-                        mediaExtractor.readSampleData(byteBuffer, 0);
-                        //skip first I frame
-                        if (mediaExtractor.getSampleFlags() == MediaExtractor.SAMPLE_FLAG_SYNC)
-                            mediaExtractor.advance();
-                        mediaExtractor.readSampleData(byteBuffer, 0);
-                        long firstVideoPTS = mediaExtractor.getSampleTime();
+
+                    mediaExtractor.readSampleData(byteBuffer, 0);
+                    //skip first I frame
+                    if (mediaExtractor.getSampleFlags() == MediaExtractor.SAMPLE_FLAG_SYNC) {
                         mediaExtractor.advance();
-                        mediaExtractor.readSampleData(byteBuffer, 0);
-                        long SecondVideoPTS = mediaExtractor.getSampleTime();
-                        videoSampleTime = Math.abs(SecondVideoPTS - firstVideoPTS);
-                        Log.d("fuck", "videoSampleTime is " + videoSampleTime);
                     }
+
+                    mediaExtractor.readSampleData(byteBuffer, 0);
+                    mediaExtractor.advance();
+                    mediaExtractor.readSampleData(byteBuffer, 0);
 
                     mediaExtractor.unselectTrack(videoIndex);
                     mediaExtractor.selectTrack(videoIndex);
@@ -263,19 +266,19 @@ public class MediaExtratorMuxerActivity extends AppCompatActivity {
 
                     long stampTime = 0;
                     //获取帧之间的间隔时间
-                    {
-                        mediaExtractor.readSampleData(byteBuffer, 0);
-                        if (mediaExtractor.getSampleFlags() == MediaExtractor.SAMPLE_FLAG_SYNC) {
-                            mediaExtractor.advance();
-                        }
-                        mediaExtractor.readSampleData(byteBuffer, 0);
-                        long secondTime = mediaExtractor.getSampleTime();
+
+                    mediaExtractor.readSampleData(byteBuffer, 0);
+                    if (mediaExtractor.getSampleFlags() == MediaExtractor.SAMPLE_FLAG_SYNC) {
                         mediaExtractor.advance();
-                        mediaExtractor.readSampleData(byteBuffer, 0);
-                        long thirdTime = mediaExtractor.getSampleTime();
-                        stampTime = Math.abs(thirdTime - secondTime);
-                        Log.e("fuck", stampTime + "");
                     }
+                    mediaExtractor.readSampleData(byteBuffer, 0);
+                    long secondTime = mediaExtractor.getSampleTime();
+                    mediaExtractor.advance();
+                    mediaExtractor.readSampleData(byteBuffer, 0);
+                    long thirdTime = mediaExtractor.getSampleTime();
+                    stampTime = Math.abs(thirdTime - secondTime);
+                    Log.e(TAG, stampTime + "");
+
 
                     mediaExtractor.unselectTrack(audioIndex);
                     mediaExtractor.selectTrack(audioIndex);
@@ -296,7 +299,7 @@ public class MediaExtratorMuxerActivity extends AppCompatActivity {
                     mediaMuxer.stop();
                     mediaMuxer.release();
                     mediaExtractor.release();
-                    Log.e("fuck", "finish");
+                    Log.e(TAG, "finish");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
